@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b3207cda-a155-489e-83df-a8a1601838be" name="Changes" comment="feat: estructura base por capas con FastAPI (offers + scoring)">
-      <change afterPath="$PROJECT_DIR$/data/cv.pdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/cv_service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="b3207cda-a155-489e-83df-a8a1601838be" name="Changes" comment="Conectados a la API de Gemini">
       <change beforePath="$PROJECT_DIR$/data/offers.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/offers.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/repositories/offer_repository.py" beforeDir="false" afterPath="$PROJECT_DIR$/repositories/offer_repository.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/scoring_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/scoring_service.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -142,7 +136,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1780476421229</updated>
-      <workItem from="1780476422243" duration="9262000" />
+      <workItem from="1780476422243" duration="9612000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Structure">
       <option name="closed" value="true" />
@@ -160,7 +154,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780488334385</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Conectados a la API de Gemini">
+      <option name="closed" value="true" />
+      <created>1780499227448</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1780499227448</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -169,10 +171,11 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial Structure" />
     <MESSAGE value="feat: estructura base por capas con FastAPI (offers + scoring)" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: estructura base por capas con FastAPI (offers + scoring)" />
+    <MESSAGE value="Conectados a la API de Gemini" />
+    <option name="LAST_COMMIT_MESSAGE" value="Conectados a la API de Gemini" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/jobfinder_ai$jobfinder_ai.coverage" NAME="jobfinder_ai Coverage Results" MODIFIED="1780488006634" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/jobfinder_ai$main.coverage" NAME="main Coverage Results" MODIFIED="1780498943621" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/jobfinder_ai$main.coverage" NAME="main Coverage Results" MODIFIED="1780499343233" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
