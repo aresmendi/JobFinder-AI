@@ -4,3 +4,5 @@ pydantic-settings
 httpx
 beautifulsoup4
 google-genai
+pdfplumber
+python-docx

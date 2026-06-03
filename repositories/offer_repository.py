@@ -16,6 +16,8 @@ class OfferRepository:
             self._write([])
 
     def _read(self) -> List[dict]:
+        if not self.path.exists() or self.path.stat().st_size == 0:
+            return []
         return json.loads(self.path.read_text(encoding="utf-8"))
 
     def _write(self, rows: List[dict]) -> None:

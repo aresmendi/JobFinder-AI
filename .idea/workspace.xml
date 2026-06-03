@@ -1,20 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b3207cda-a155-489e-83df-a8a1601838be" name="Changes" comment="Initial Structure">
-      <change afterPath="$PROJECT_DIR$/models/offer.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/repositories/offer_repository.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/routers/offers.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/routers/scoring.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/schemas/offer.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/schemas/scoring.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/scoring_service.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/scraper_service.py" afterDir="false" />
+    <list default="true" id="b3207cda-a155-489e-83df-a8a1601838be" name="Changes" comment="feat: estructura base por capas con FastAPI (offers + scoring)">
+      <change afterPath="$PROJECT_DIR$/data/cv.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/cv_service.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/offers.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/offers.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/repositories/offer_repository.py" beforeDir="false" afterPath="$PROJECT_DIR$/repositories/offer_repository.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/scoring_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/scoring_service.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,13 +62,14 @@
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/aresc/PycharmProjects/jobfinder_ai/routers",
+    "last_opened_file_path": "C:/Users/aresc/PycharmProjects/jobfinder_ai/data",
     "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\aresc\PycharmProjects\jobfinder_ai\data" />
       <recent name="C:\Users\aresc\PycharmProjects\jobfinder_ai\routers" />
       <recent name="C:\Users\aresc\PycharmProjects\jobfinder_ai" />
     </key>
@@ -147,7 +142,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1780476421229</updated>
-      <workItem from="1780476422243" duration="7202000" />
+      <workItem from="1780476422243" duration="9262000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Structure">
       <option name="closed" value="true" />
@@ -157,7 +152,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780480808448</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="feat: estructura base por capas con FastAPI (offers + scoring)">
+      <option name="closed" value="true" />
+      <created>1780488334385</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1780488334385</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -165,10 +168,11 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial Structure" />
-    <option name="LAST_COMMIT_MESSAGE" value="Initial Structure" />
+    <MESSAGE value="feat: estructura base por capas con FastAPI (offers + scoring)" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: estructura base por capas con FastAPI (offers + scoring)" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/jobfinder_ai$jobfinder_ai.coverage" NAME="jobfinder_ai Coverage Results" MODIFIED="1780488006634" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/jobfinder_ai$main.coverage" NAME="main Coverage Results" MODIFIED="1780488009364" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/jobfinder_ai$main.coverage" NAME="main Coverage Results" MODIFIED="1780498943621" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

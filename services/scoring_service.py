@@ -12,11 +12,9 @@ class ScoringService:
         self.client = genai.Client(api_key=settings.gemini_api_key)
 
     def _load_cv(self) -> str:
-        try:
-            with open(settings.cv_file, "r", encoding="utf-8") as f:
-                return f.read()
-        except FileNotFoundError:
-            return "CV no disponible"
+        from services.cv_service import cargar_cv, buscar_cv
+        ruta = buscar_cv()  # busca data/cv.pdf, cv.docx o cv.txt
+        return cargar_cv(ruta) if ruta else "CV no disponible."
 
     def score_offer(self, offer: Offer) -> Offer:
         prompt = (
