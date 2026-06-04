@@ -42,7 +42,7 @@ Abre la documentación interactiva en **http://127.0.0.1:8000/docs**
 - `data/cv.txt` — tu CV en texto (para el match)
 
 ## Roadmap
-- [ ] Scraping real de un portal de empleo
+- [X] Scraping real de un portal de empleo
 - [ ] Búsqueda semántica con embeddings
 - [ ] Persistencia en BD
 - [ ] Dockerizar
