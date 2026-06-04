@@ -18,8 +18,13 @@ class ScoringService:
 
     def score_offer(self, offer: Offer) -> Offer:
         prompt = (
-            "Eres un asistente que evalua el encaje entre una oferta de empleo y un CV. "
-            "Devuelve SOLO un JSON con las claves 'score' (entero 0-100) y 'reason' (string breve).\n\n"
+            "Eres un experto en ATS (Applicant Tracking Systems). "
+            "Evalúa el encaje entre una OFERTA de empleo y un CV. "
+            "Devuelve SOLO un JSON con estas claves:\n"
+            '- "score": entero 0-100 (encaje global)\n'
+            '- "matched_keywords": lista de tecnologías/keywords clave de la oferta que SÍ aparecen en el CV\n'
+            '- "missing_keywords": lista de tecnologías/keywords clave de la oferta que FALTAN en el CV\n'
+            '- "reason": string breve con el encaje y qué mejorar\n\n'
             f"CV:\n{self._load_cv()}\n\n"
             f"OFERTA:\n{offer.title}\n{offer.company}\n{offer.description}\n"
         )
@@ -30,6 +35,8 @@ class ScoringService:
         data = self._parse(resp.text)
         offer.score = int(data.get("score", 0))
         offer.score_reason = data.get("reason", "")
+        offer.matched_keywords = data.get("matched_keywords", [])
+        offer.missing_keywords = data.get("missing_keywords", [])
         #persistimos el resultado
         offers = self.repo.list_all()
         for i, o in enumerate(offers):

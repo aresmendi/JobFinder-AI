@@ -14,4 +14,11 @@ def score_offer(offer_id: int):
     if offer is None:
         raise HTTPException(status_code=404, detail="Oferta no encontrada")
     scored = ScoringService(repo).score_offer(offer)
-    return ScoreResponse(offer_id=scored.id, score=scored.score or 0, reason=scored.score_reason or "")
+    return ScoreResponse(
+        offer_id=scored.id,
+        score=scored.score or 0,
+        matched_keywords=scored.matched_keywords or [],
+        missing_keywords=scored.missing_keywords or [],
+        reason=scored.score_reason or "",
+    )
+

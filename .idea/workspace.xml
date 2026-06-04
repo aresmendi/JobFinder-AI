@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b3207cda-a155-489e-83df-a8a1601838be" name="Changes" comment="Conectados a la API de Gemini">
-      <change beforePath="$PROJECT_DIR$/data/offers.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/offers.json" afterDir="false" />
+    <list default="true" id="b3207cda-a155-489e-83df-a8a1601838be" name="Changes" comment="fixed:Error al leer los currículums">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/offer.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/offer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routers/scoring.py" beforeDir="false" afterPath="$PROJECT_DIR$/routers/scoring.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schemas/scoring.py" beforeDir="false" afterPath="$PROJECT_DIR$/schemas/scoring.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/scoring_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/scoring_service.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,22 +25,22 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "aresmendi"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;aresmendi&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/aresmendi/JobFinder-AI.git",
-    "accountId": "c47ad88c-105c-42ec-975c-c0637f5e5e43"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/aresmendi/JobFinder-AI.git&quot;,
+    &quot;accountId&quot;: &quot;c47ad88c-105c-42ec-975c-c0637f5e5e43&quot;
   }
-}]]></component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 5,
-  "fromUser": false
-}]]></component>
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5,
+  &quot;fromUser&quot;: false
+}</component>
   <component name="ProjectId" id="3EcSZfF1CYaJq0chCrV4d9P4YAR" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -45,22 +49,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "FastAPI.jobfinder_ai.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Python.main.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/aresc/PycharmProjects/jobfinder_ai/data",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;FastAPI.jobfinder_ai.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/aresc/PycharmProjects/jobfinder_ai/data&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\aresc\PycharmProjects\jobfinder_ai\data" />
@@ -136,7 +140,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1780476421229</updated>
-      <workItem from="1780476422243" duration="9612000" />
+      <workItem from="1780476422243" duration="10163000" />
+      <workItem from="1780560458273" duration="630000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Structure">
       <option name="closed" value="true" />
@@ -162,7 +167,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780499227448</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="fixed:Error al leer los currículums">
+      <option name="closed" value="true" />
+      <created>1780499640494</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1780499640494</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -172,10 +185,11 @@
     <MESSAGE value="Initial Structure" />
     <MESSAGE value="feat: estructura base por capas con FastAPI (offers + scoring)" />
     <MESSAGE value="Conectados a la API de Gemini" />
-    <option name="LAST_COMMIT_MESSAGE" value="Conectados a la API de Gemini" />
+    <MESSAGE value="fixed:Error al leer los currículums" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed:Error al leer los currículums" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/jobfinder_ai$jobfinder_ai.coverage" NAME="jobfinder_ai Coverage Results" MODIFIED="1780488006634" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/jobfinder_ai$main.coverage" NAME="main Coverage Results" MODIFIED="1780499343233" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/jobfinder_ai$main.coverage" NAME="main Coverage Results" MODIFIED="1780499528831" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

@@ -7,6 +7,14 @@
     "location": "Remoto",
     "description": "Buscamos junior con Python, FastAPI y ganas de IA.",
     "score": 90,
-    "score_reason": "Excelente encaje: el CV destaca Python y FastAPI, tecnologías clave de la oferta, además de experiencia en proyectos relevantes. Faltaría indicar interés en IA."
+    "score_reason": "Excelente encaje técnico. El CV demuestra una fuerte experiencia y conocimiento en Python y FastAPI, elementos clave de la oferta. El perfil general es muy adecuado para un rol junior. El principal punto a mejorar es la ausencia de menciones o interés explícito en Inteligencia Artificial.",
+    "matched_keywords": [
+      "Python",
+      "FastAPI",
+      "Junior"
+    ],
+    "missing_keywords": [
+      "IA"
+    ]
   }
 ]
