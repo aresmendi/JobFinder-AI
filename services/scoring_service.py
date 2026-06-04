@@ -1,4 +1,5 @@
 import json
+import time
 from google import genai
 from core.config import settings
 from models.offer import Offer
@@ -44,6 +45,19 @@ class ScoringService:
                 offers[i] = offer
         self.repo.save_all(offers)
         return offer
+
+    def score_all(self, pausa: float = 4.0) -> list[Offer]:
+        pendientes = [o for o in self.repo.list_all() if o.score is None]
+        for i, offer in enumerate(pendientes):
+            try:
+                self.score_offer(offer)            # puntúa y persiste
+            except Exception as e:
+                print(f"⚠️ Error en oferta {offer.id}: {e}")
+            if i < len(pendientes) - 1:
+                time.sleep(pausa)                  # respeta el rate limit free tier
+        return sorted(self.repo.list_all(),
+                      key=lambda o: (o.score or -1), reverse=True)
+
 
     @staticmethod
     def _parse(text: str) -> dict:

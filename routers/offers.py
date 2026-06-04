@@ -18,6 +18,6 @@ def get_offer(offer_id: int):
         raise HTTPException(status_code=404, detail="Oferta no encontrada")
     return offer
 
-@router.post("/scrape",response_model=List[OfferResponse])
-def scrape_offer():
-    return ScraperService(repo).scrape()
+@router.post("/scrape", response_model=List[OfferResponse])
+def scrape_offer(q: str = "python"):
+    return ScraperService(repo).scrape(q)

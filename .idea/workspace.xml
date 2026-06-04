@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b3207cda-a155-489e-83df-a8a1601838be" name="Changes" comment="fixed:Error al leer los currículums">
+    <list default="true" id="b3207cda-a155-489e-83df-a8a1601838be" name="Changes" comment="feat: match ATS estilo Jobscan (keywords presentes/faltantes en scoring)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/offer.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/offer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/offers.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/offers.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routers/offers.py" beforeDir="false" afterPath="$PROJECT_DIR$/routers/offers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routers/scoring.py" beforeDir="false" afterPath="$PROJECT_DIR$/routers/scoring.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schemas/scoring.py" beforeDir="false" afterPath="$PROJECT_DIR$/schemas/scoring.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/scoring_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/scoring_service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/scraper_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/scraper_service.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -141,7 +143,7 @@
       <option name="presentableId" value="Default" />
       <updated>1780476421229</updated>
       <workItem from="1780476422243" duration="10163000" />
-      <workItem from="1780560458273" duration="630000" />
+      <workItem from="1780560458273" duration="5548000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Structure">
       <option name="closed" value="true" />
@@ -175,7 +177,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780499640494</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="feat: match ATS estilo Jobscan (keywords presentes/faltantes en scoring)">
+      <option name="closed" value="true" />
+      <created>1780561203091</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1780561203091</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -186,10 +196,11 @@
     <MESSAGE value="feat: estructura base por capas con FastAPI (offers + scoring)" />
     <MESSAGE value="Conectados a la API de Gemini" />
     <MESSAGE value="fixed:Error al leer los currículums" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed:Error al leer los currículums" />
+    <MESSAGE value="feat: match ATS estilo Jobscan (keywords presentes/faltantes en scoring)" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: match ATS estilo Jobscan (keywords presentes/faltantes en scoring)" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/jobfinder_ai$jobfinder_ai.coverage" NAME="jobfinder_ai Coverage Results" MODIFIED="1780488006634" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/jobfinder_ai$main.coverage" NAME="main Coverage Results" MODIFIED="1780499528831" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/jobfinder_ai$main.coverage" NAME="main Coverage Results" MODIFIED="1780563703775" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
