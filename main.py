@@ -1,10 +1,10 @@
 from fastapi import FastAPI
-from routers import offers, scoring
+from routers import offers, scoring, search
 app = FastAPI(title="JobFinder AI")
 
 app.include_router(offers.router)
-
 app.include_router(scoring.router)
+app.include_router(search.router)
 
 @app.get("/health")
 def health():

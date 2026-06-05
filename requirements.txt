@@ -7,3 +7,4 @@ google-genai
 pdfplumber
 python-docx
 playwright
+sentence-transformers
