@@ -75,8 +75,14 @@ class ScoringService:
         self.repo.save_all(offers)
         return offer
 
-    def score_all(self, pausa: float = 4.0) -> list[Offer]:
-        pendientes = [o for o in self.repo.list_all() if o.score is None]
+    def score_all(self, pausa: float = 4.0, pre_filter: int | None = None) -> list[Offer]:
+        if pre_filter is not None:
+            from services.embedding_service import EmbeddingService
+            candidatas = {o.id for o, _ in EmbeddingService(self.repo).search_by_cv(top_k=pre_filter)}
+            pendientes = [o for o in self.repo.list_all() if o.score is None and o.id in candidatas]
+            print(f"ℹ️  pre_filter={pre_filter}: {len(pendientes)} ofertas pasan el filtro semántico")
+        else:
+            pendientes = [o for o in self.repo.list_all() if o.score is None]
         for i, offer in enumerate(pendientes):
             try:
                 self.score_offer(offer)

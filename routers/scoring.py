@@ -1,4 +1,5 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
+from typing import Optional
 
 from repositories.offer_repository import OfferRepository
 from schemas.scoring import ScoreResponse
@@ -8,8 +9,8 @@ router = APIRouter(prefix="/scoring", tags=["scoring"])
 repo = OfferRepository()
 
 @router.post("/all", response_model=list[ScoreResponse])
-def score_all():
-    scored = ScoringService(repo).score_all()
+def score_all(pre_filter: Optional[int] = Query(default=None, description="Si se indica, filtra primero con embeddings y solo puntúa las top-N más similares al CV")):
+    scored = ScoringService(repo).score_all(pre_filter=pre_filter)
     return [
         ScoreResponse(
             offer_id=o.id, score=o.score or 0,
