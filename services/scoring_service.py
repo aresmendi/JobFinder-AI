@@ -42,8 +42,17 @@ class ScoringService:
                 return resp.text
             except ClientError as e:
                 err_str = str(e)
+                # 503 = sobrecarga temporal → esperar y reintentar el mismo modelo una vez
+                if e.status == 503 or "UNAVAILABLE" in err_str:
+                    print(f"⚠️  {model} sobrecargado (503), esperando 10s...")
+                    time.sleep(10)
+                    try:
+                        resp = self.client.models.generate_content(model=model, contents=prompt)
+                        return resp.text
+                    except Exception:
+                        pass  # si falla de nuevo, cae al siguiente modelo
                 # 429 = quota agotada, 404 = modelo deprecado/no disponible → probar siguiente
-                if e.status in (429, 404) or "RESOURCE_EXHAUSTED" in err_str or "NOT_FOUND" in err_str:
+                if e.status in (429, 404, 503) or "RESOURCE_EXHAUSTED" in err_str or "NOT_FOUND" in err_str or "UNAVAILABLE" in err_str:
                     print(f"⚠️  {model} no disponible ({e.status}), probando siguiente...")
                     last_error = e
                     continue
