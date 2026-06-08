@@ -6,11 +6,11 @@ from core.config import settings
 from models.offer import Offer
 from repositories.offer_repository import OfferRepository
 
-# Chain de fallback: se intenta en orden hasta que uno responda sin quota error
+# Chain de fallback: se intenta en orden hasta que uno responda sin error de quota/deprecación
 FALLBACK_MODELS = [
+    "gemini-2.5-flash",
     "gemini-2.0-flash",
-    "gemini-1.5-flash",
-    "gemini-1.5-flash-8b",
+    "gemini-2.0-flash-lite",
 ]
 
 
@@ -41,9 +41,10 @@ class ScoringService:
                     print(f"ℹ️  Usando modelo de fallback: {model}")
                 return resp.text
             except ClientError as e:
-                # 429 = RESOURCE_EXHAUSTED (quota agotada), reintenta con el siguiente
-                if e.status == 429 or "RESOURCE_EXHAUSTED" in str(e):
-                    print(f"⚠️  Quota agotada en {model}, probando siguiente...")
+                err_str = str(e)
+                # 429 = quota agotada, 404 = modelo deprecado/no disponible → probar siguiente
+                if e.status in (429, 404) or "RESOURCE_EXHAUSTED" in err_str or "NOT_FOUND" in err_str:
+                    print(f"⚠️  {model} no disponible ({e.status}), probando siguiente...")
                     last_error = e
                     continue
                 raise
