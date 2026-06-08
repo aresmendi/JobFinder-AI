@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JobFinder AI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .score-high   { background:#22c55e; color:#fff; }
+    .score-mid    { background:#f59e0b; color:#fff; }
+    .score-low    { background:#ef4444; color:#fff; }
+    .score-none   { background:#6b7280; color:#fff; }
+    .card-enter   { animation: fadeUp .25s ease both; }
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(12px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .spinner { border:3px solid #e5e7eb; border-top-color:#6366f1; border-radius:50%;
+               width:20px; height:20px; animation:spin .7s linear infinite; display:inline-block; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen font-sans">
+
+<!-- ── HEADER ── -->
+<header class="bg-gradient-to-r from-indigo-700 to-violet-700 text-white shadow-lg">
+  <div class="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold tracking-tight">JobFinder AI</h1>
+      <p class="text-indigo-200 text-sm mt-0.5">Scraping · Embeddings · LLM Scoring</p>
+    </div>
+    <div id="offerCount" class="text-right text-sm text-indigo-200"></div>
+  </div>
+</header>
+
+<!-- ── CONTROLES ── -->
+<main class="max-w-6xl mx-auto px-6 py-8 space-y-6">
+
+  <!-- Panel de scraping -->
+  <section class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+    <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Buscar ofertas</h2>
+    <div class="flex flex-wrap gap-3">
+      <input id="inQuery"    type="text" placeholder="Puesto (ej. python, backend)"
+             class="flex-1 min-w-[160px] border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+      <input id="inLocation" type="text" placeholder="Ubicación (ej. Valencia)"
+             class="flex-1 min-w-[140px] border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+      <select id="inPortal"
+              class="border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white">
+        <option value="all">Todos los portales</option>
+        <option value="tecnoempleo">Tecnoempleo</option>
+        <option value="infojobs">Infojobs</option>
+        <option value="indeed">Indeed</option>
+        <option value="linkedin">LinkedIn</option>
+      </select>
+      <button onclick="scrapeOffers()"
+              class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition flex items-center gap-2">
+        <span id="scrapeIcon">🔍</span> Scrapear
+      </button>
+    </div>
+  </section>
+
+  <!-- Panel de búsqueda semántica + scoring -->
+  <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+      <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Búsqueda semántica</h2>
+      <div class="flex gap-2">
+        <input id="inSearch" type="text" placeholder="Describe el puesto que buscas..."
+               class="flex-1 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-violet-400"
+               onkeydown="if(event.key==='Enter') semanticSearch()" />
+        <button onclick="semanticSearch()"
+                class="bg-violet-600 hover:bg-violet-700 text-white px-4 py-2.5 rounded-lg text-sm font-medium transition">
+          Buscar
+        </button>
+        <button onclick="searchByCv()"
+                class="border border-violet-300 text-violet-700 hover:bg-violet-50 px-4 py-2.5 rounded-lg text-sm font-medium transition"
+                title="Ofertas más parecidas a tu CV">
+          Mi CV
+        </button>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+      <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Scoring LLM</h2>
+      <div class="flex gap-2 items-center">
+        <div class="flex-1 text-sm text-gray-500">
+          Pre-filtro semántico (top-N antes del LLM):
+          <input id="inPrefilter" type="number" value="20" min="1" max="100"
+                 class="ml-2 w-16 border border-gray-200 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400" />
+        </div>
+        <button onclick="scoreAll()"
+                class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg text-sm font-medium transition flex items-center gap-2">
+          <span id="scoreIcon">⚡</span> Scorear todo
+        </button>
+        <button onclick="loadOffers()"
+                class="border border-gray-200 text-gray-600 hover:bg-gray-50 px-4 py-2.5 rounded-lg text-sm transition">
+          Recargar
+        </button>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- Mensaje de estado -->
+  <div id="statusMsg" class="hidden text-sm text-center text-gray-500 py-2"></div>
+
+  <!-- Filtro y orden -->
+  <div class="flex items-center justify-between">
+    <div class="flex gap-2 text-sm">
+      <button onclick="filterOffers('all')"    id="fAll"    class="filter-btn active-filter px-3 py-1.5 rounded-lg border">Todas</button>
+      <button onclick="filterOffers('scored')" id="fScored" class="filter-btn px-3 py-1.5 rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50">Con score</button>
+      <button onclick="filterOffers('high')"   id="fHigh"   class="filter-btn px-3 py-1.5 rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50">Score ≥ 70</button>
+    </div>
+    <p id="resultCount" class="text-sm text-gray-400"></p>
+  </div>
+
+  <!-- Grid de ofertas -->
+  <div id="offersGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+
+  <div id="emptyState" class="hidden text-center py-16 text-gray-400">
+    <p class="text-5xl mb-4">🔎</p>
+    <p class="text-lg font-medium">Sin ofertas todavía</p>
+    <p class="text-sm mt-1">Usa el panel de arriba para scrapear portales de empleo.</p>
+  </div>
+
+</main>
+
+<script>
+  let allOffers = [];
+  let currentFilter = 'all';
+
+  // ── Utilidades ──────────────────────────────────────────────────────────────
+
+  function scoreBadge(score) {
+    if (score == null) return '<span class="score-none text-xs px-2 py-0.5 rounded-full font-semibold">Sin score</span>';
+    const cls = score >= 70 ? 'score-high' : score >= 40 ? 'score-mid' : 'score-low';
+    return `<span class="${cls} text-xs px-2 py-0.5 rounded-full font-semibold">${score}/100</span>`;
+  }
+
+  function sourceBadge(source) {
+    const colors = {
+      tecnoempleo: 'bg-blue-100 text-blue-700',
+      infojobs:    'bg-orange-100 text-orange-700',
+      indeed:      'bg-purple-100 text-purple-700',
+      linkedin:    'bg-sky-100 text-sky-700',
+    };
+    const label = source || 'desconocido';
+    const cls = colors[label] || 'bg-gray-100 text-gray-600';
+    return `<span class="${cls} text-xs px-2 py-0.5 rounded-full font-medium capitalize">${label}</span>`;
+  }
+
+  function pills(list, color) {
+    if (!list || list.length === 0) return '';
+    return list.map(k => `<span class="${color} text-xs px-2 py-0.5 rounded-full">${k}</span>`).join(' ');
+  }
+
+  function setStatus(msg, loading = false) {
+    const el = document.getElementById('statusMsg');
+    el.classList.remove('hidden');
+    el.innerHTML = loading ? `<span class="spinner"></span> ${msg}` : msg;
+    if (!msg) el.classList.add('hidden');
+  }
+
+  // ── Renderizado ─────────────────────────────────────────────────────────────
+
+  function renderOffers(offers) {
+    const grid = document.getElementById('offersGrid');
+    const empty = document.getElementById('emptyState');
+    document.getElementById('resultCount').textContent = `${offers.length} oferta${offers.length !== 1 ? 's' : ''}`;
+
+    if (offers.length === 0) {
+      grid.innerHTML = '';
+      empty.classList.remove('hidden');
+      return;
+    }
+    empty.classList.add('hidden');
+
+    grid.innerHTML = offers.map((o, i) => `
+      <div class="card-enter bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex flex-col gap-3 hover:shadow-md transition"
+           style="animation-delay:${i * 0.03}s">
+        <div class="flex items-start justify-between gap-2">
+          <div class="flex-1 min-w-0">
+            <a href="${o.url}" target="_blank"
+               class="font-semibold text-gray-800 hover:text-indigo-600 transition line-clamp-2 leading-snug text-sm">
+              ${o.title}
+            </a>
+            <p class="text-xs text-gray-400 mt-1">${o.company || ''} ${o.location ? '· ' + o.location : ''}</p>
+          </div>
+          ${scoreBadge(o.score)}
+        </div>
+
+        ${o.description ? `<p class="text-xs text-gray-500 line-clamp-2">${o.description}</p>` : ''}
+
+        <div class="flex flex-wrap gap-1.5">
+          ${sourceBadge(o.source)}
+          ${pills(o.matched_keywords, 'bg-green-100 text-green-700')}
+        </div>
+
+        ${o.missing_keywords && o.missing_keywords.length ? `
+          <div class="flex flex-wrap gap-1">
+            <span class="text-xs text-gray-400 mr-1">Faltan:</span>
+            ${pills(o.missing_keywords, 'bg-red-50 text-red-500')}
+          </div>` : ''}
+
+        ${o.score_reason ? `<p class="text-xs text-gray-400 italic border-t pt-2 line-clamp-2">${o.score_reason}</p>` : ''}
+
+        ${o.score == null ? `
+          <button onclick="scoreOne(${o.id})"
+                  class="text-xs text-indigo-600 hover:underline self-start mt-auto">
+            Puntuar esta oferta
+          </button>` : ''}
+      </div>
+    `).join('');
+  }
+
+  function applyFilter() {
+    let list = [...allOffers];
+    if (currentFilter === 'scored') list = list.filter(o => o.score != null);
+    if (currentFilter === 'high')   list = list.filter(o => o.score != null && o.score >= 70);
+    list.sort((a, b) => (b.score ?? -1) - (a.score ?? -1));
+    renderOffers(list);
+  }
+
+  function filterOffers(f) {
+    currentFilter = f;
+    document.querySelectorAll('.filter-btn').forEach(b => {
+      b.className = 'filter-btn px-3 py-1.5 rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50 text-sm';
+    });
+    const active = document.getElementById({ all: 'fAll', scored: 'fScored', high: 'fHigh' }[f]);
+    active.className = 'filter-btn px-3 py-1.5 rounded-lg border border-indigo-500 bg-indigo-50 text-indigo-700 font-medium text-sm';
+    applyFilter();
+  }
+
+  // ── API calls ────────────────────────────────────────────────────────────────
+
+  async function loadOffers() {
+    setStatus('Cargando ofertas...', true);
+    try {
+      const res = await fetch('/offers');
+      allOffers = await res.json();
+      document.getElementById('offerCount').textContent =
+        `${allOffers.length} oferta${allOffers.length !== 1 ? 's' : ''} en caché`;
+      applyFilter();
+      setStatus('');
+    } catch (e) {
+      setStatus('Error al conectar con la API.');
+    }
+  }
+
+  async function scrapeOffers() {
+    const q        = document.getElementById('inQuery').value.trim() || 'python';
+    const location = document.getElementById('inLocation').value.trim();
+    const portal   = document.getElementById('inPortal').value;
+    const icon     = document.getElementById('scrapeIcon');
+
+    icon.innerHTML = '<span class="spinner"></span>';
+    setStatus(`Scrapeando ${portal === 'all' ? 'todos los portales' : portal}...`, true);
+
+    try {
+      const params = new URLSearchParams({ q, location, portal });
+      const res = await fetch(`/offers/scrape?${params}`, { method: 'POST' });
+      const nuevas = await res.json();
+      setStatus(`✅ ${nuevas.length} oferta${nuevas.length !== 1 ? 's' : ''} nueva${nuevas.length !== 1 ? 's' : ''} encontrada${nuevas.length !== 1 ? 's' : ''}.`);
+      await loadOffers();
+    } catch (e) {
+      setStatus('Error al scrapear.');
+    } finally {
+      icon.textContent = '🔍';
+    }
+  }
+
+  async function scoreAll() {
+    const prefilter = document.getElementById('inPrefilter').value;
+    const icon      = document.getElementById('scoreIcon');
+
+    icon.innerHTML = '<span class="spinner"></span>';
+    setStatus('Scoring en lote con LLM (puede tardar varios minutos)...', true);
+
+    try {
+      const params = prefilter ? `?pre_filter=${prefilter}` : '';
+      const res = await fetch(`/scoring/all${params}`, { method: 'POST' });
+      const scored = await res.json();
+      setStatus(`✅ ${scored.length} oferta${scored.length !== 1 ? 's' : ''} puntuada${scored.length !== 1 ? 's' : ''}.`);
+      await loadOffers();
+    } catch (e) {
+      setStatus('Error en el scoring.');
+    } finally {
+      icon.textContent = '⚡';
+    }
+  }
+
+  async function scoreOne(id) {
+    setStatus('Puntuando oferta...', true);
+    try {
+      await fetch(`/scoring/${id}`, { method: 'POST' });
+      setStatus('✅ Puntuada.');
+      await loadOffers();
+    } catch (e) {
+      setStatus('Error al puntuar.');
+    }
+  }
+
+  async function semanticSearch() {
+    const q = document.getElementById('inSearch').value.trim();
+    if (!q) return;
+    setStatus('Buscando...', true);
+    try {
+      const res = await fetch(`/search?q=${encodeURIComponent(q)}&top_k=20`);
+      const results = await res.json();
+      allOffers = results.map(r => r.offer);
+      document.getElementById('offerCount').textContent = `Resultado búsqueda: "${q}"`;
+      renderOffers(allOffers);
+      setStatus('');
+    } catch (e) {
+      setStatus('Error en la búsqueda.');
+    }
+  }
+
+  async function searchByCv() {
+    setStatus('Buscando ofertas similares a tu CV...', true);
+    try {
+      const res = await fetch('/search/cv?top_k=20');
+      const results = await res.json();
+      allOffers = results.map(r => r.offer);
+      document.getElementById('offerCount').textContent = 'Ofertas más similares a tu CV';
+      renderOffers(allOffers);
+      setStatus('');
+    } catch (e) {
+      setStatus('Error al buscar por CV.');
+    }
+  }
+
+  // ── Init ─────────────────────────────────────────────────────────────────────
+  filterOffers('all');
+  loadOffers();
+</script>
+</body>
+</html>
