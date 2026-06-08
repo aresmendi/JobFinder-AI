@@ -60,7 +60,13 @@ class ScoringService:
         raise last_error
 
     def score_offer(self, offer: Offer) -> Offer:
+        if not offer.description and not offer.title:
+            offer.score = 0
+            offer.score_reason = "Oferta sin descripción ni título — no se puede scorear."
+            return offer
+
         cv_text = self._load_cv()
+        desc_block = offer.description or "(sin descripción disponible — evalúa solo por título y empresa)"
         prompt = (
             "Eres un experto en ATS (Applicant Tracking Systems). "
             "Evalúa el encaje entre una OFERTA de empleo y un CV. "
@@ -70,7 +76,7 @@ class ScoringService:
             '- "missing_keywords": lista de tecnologías/keywords clave de la oferta que FALTAN en el CV\n'
             '- "reason": string breve con el encaje y qué mejorar\n\n'
             f"CV:\n{cv_text}\n\n"
-            f"OFERTA:\n{offer.title}\n{offer.company}\n{offer.description}\n"
+            f"OFERTA:\nTítulo: {offer.title}\nEmpresa: {offer.company}\nDescripción: {desc_block}\n"
         )
         text = self._generate_with_fallback(prompt)
         data = self._parse(text)
