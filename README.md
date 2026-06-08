@@ -1,51 +1,164 @@
-# JobFinder AI 🔎🤖
+# JobFinder AI
 
-Asistente que **recoge ofertas de empleo**, las guarda y las **puntúa (0-100) contra tu CV**
-usando un LLM vía API. Backend en **FastAPI** con arquitectura por capas.
+Backend en **FastAPI** que scrapea ofertas de empleo de múltiples portales, las indexa con **embeddings** para búsqueda semántica y las **puntúa automáticamente contra tu CV** usando un LLM (Google Gemini).
 
-## Stack
-Python · FastAPI · Pydantic · Google Gemini (API) · scraping (requests/bs4)
-
-## Arquitectura por capas
-| Capa | Carpeta | Rol (equivalente Spring) |
-|------|---------|--------------------------|
-| Dominio | `models/` | Entidades (`@Entity`) |
-| API I/O | `schemas/` | DTOs |
-| Datos | `repositories/` | `@Repository` |
-| Negocio | `services/` | `@Service` |
-| Endpoints | `routers/` | `@RestController` |
-| Config | `core/` | configuración / settings |
-| Arranque | `main.py` | clase `Application` |
-
-Flujo: `router → service → repository → model`.
-
-## Puesta en marcha
-```bash
-python -m venv .venv
-source .venv/bin/activate        # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-
-cp .env .env             # y pon tu GEMINI_API_KEY
-uvicorn main:app --reload
-```
-Abre la documentación interactiva en **http://127.0.0.1:8000/docs**
-
-## Endpoints
-- `GET /health` — estado del servicio
-- `GET /offers` — lista ofertas guardadas
-- `GET /offers/{id}` — una oferta
-- `POST /offers/scrape` — recoge ofertas (de momento datos de ejemplo)
-- `POST /scoring/{id}` — puntúa una oferta contra el CV con el LLM
-
-## Datos
-- `data/offers.json` — cache de ofertas
-- `data/cv.txt` — tu CV en texto (para el match)
-
-## Roadmap
-- [X] Scraping real de un portal de empleo
-- [X] Búsqueda semántica con embeddings
-- [ ] Persistencia en BD
-- [ ] Dockerizar
+Construido para aprender y demostrar: FastAPI, scraping, prompt engineering, RAG y embeddings — todo en un proyecto que sirve de verdad para buscar trabajo.
 
 ---
-Proyecto personal de aprendizaje (backend + IA).
+
+## Stack
+
+| Tecnología | Uso |
+|---|---|
+| Python + FastAPI | Backend y API REST |
+| Google Gemini API | Scoring LLM (match 0-100 + keywords) |
+| sentence-transformers | Embeddings + búsqueda semántica (RAG) |
+| Playwright + BeautifulSoup | Scraping multi-portal |
+| Pydantic + pydantic-settings | Validación y configuración |
+
+---
+
+## Arquitectura por capas
+
+```
+models/        → entidades de dominio (Offer)
+schemas/       → DTOs de entrada/salida (Pydantic)
+repositories/  → acceso a datos (JSON store)
+services/      → lógica de negocio (scraping, scoring, embeddings)
+  scrapers/    → un scraper por portal (Tecnoempleo, Infojobs, Indeed, LinkedIn)
+routers/       → endpoints FastAPI
+core/          → configuración (.env)
+```
+
+Flujo: `router → service → repository → model`
+
+---
+
+## Puesta en marcha
+
+```bash
+# 1. Clonar y crear entorno virtual
+git clone https://github.com/aresmendi/JobFinder-AI.git
+cd JobFinder-AI
+python -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
+
+# 2. Instalar dependencias
+pip install -r requirements.txt
+playwright install chromium      # necesario para scraping con JS
+
+# 3. Configurar variables de entorno
+cp .env.example .env
+# Edita .env y añade tu GEMINI_API_KEY
+
+# 4. Añadir tu CV
+# Copia tu CV en PDF o texto a: data/cv.pdf  (o data/cv.txt)
+
+# 5. Arrancar
+uvicorn main:app --reload
+```
+
+API docs interactiva en **http://127.0.0.1:8000/docs**
+
+---
+
+## Endpoints
+
+### Ofertas
+
+| Método | Ruta | Descripción |
+|---|---|---|
+| `GET` | `/offers` | Lista todas las ofertas guardadas |
+| `GET` | `/offers/{id}` | Detalle de una oferta |
+| `POST` | `/offers/scrape` | Scrapea ofertas de uno o varios portales |
+
+**Parámetros de `/offers/scrape`:**
+- `q` — búsqueda (ej. `python`, `backend developer`)
+- `location` — ciudad o país (ej. `Valencia`, `España`)
+- `portal` — `all` · `tecnoempleo` · `infojobs` · `indeed` · `linkedin`
+
+### Scoring LLM
+
+| Método | Ruta | Descripción |
+|---|---|---|
+| `POST` | `/scoring/{id}` | Puntúa una oferta contra el CV (0-100) |
+| `POST` | `/scoring/all` | Puntúa todas las ofertas pendientes en lote |
+
+**Parámetros de `/scoring/all`:**
+- `pre_filter` — si se indica (ej. `20`), aplica pre-filtro semántico antes de llamar al LLM (reduce coste de API)
+
+**Ejemplo de respuesta:**
+```json
+{
+  "offer_id": 5,
+  "score": 82,
+  "matched_keywords": ["Python", "FastAPI", "REST"],
+  "missing_keywords": ["Kubernetes", "AWS"],
+  "reason": "Buen encaje técnico en backend Python/FastAPI. Falta experiencia cloud."
+}
+```
+
+### Búsqueda semántica
+
+| Método | Ruta | Descripción |
+|---|---|---|
+| `GET` | `/search?q=...` | Busca ofertas por significado, no por palabra exacta |
+| `GET` | `/search/cv` | Devuelve las ofertas más similares a tu CV |
+
+Parámetro `top_k` en ambos (1-50, por defecto 5/10).
+
+### Sistema
+
+| Método | Ruta | Descripción |
+|---|---|---|
+| `GET` | `/health` | Estado del servicio |
+
+---
+
+## Flujo típico
+
+```bash
+# 1. Scrapear ofertas de python en Valencia de todos los portales
+POST /offers/scrape?q=python&location=Valencia&portal=all
+
+# 2. Ver las más similares al CV (semántico, sin coste de LLM)
+GET /search/cv?top_k=10
+
+# 3. Puntuar las top-20 más relevantes con el LLM
+POST /scoring/all?pre_filter=20
+
+# 4. Ver resultados ordenados por score
+GET /offers
+```
+
+---
+
+## Portales soportados
+
+| Portal | Método | Estado |
+|---|---|---|
+| Tecnoempleo | requests + BS4 (fallback Playwright) | ✅ Estable |
+| Infojobs | Playwright | ✅ Requiere Playwright |
+| Indeed | Playwright | ✅ Requiere Playwright |
+| LinkedIn | Playwright | ⚠️ Sin descripción (listado público) |
+
+---
+
+## Conceptos aplicados
+
+- **Prompt engineering** — prompt estructurado para extraer score, keywords y razonamiento en JSON
+- **RAG** — embeddings para pre-filtrar ofertas relevantes antes de llamar al LLM (ahorra tokens y coste)
+- **Embeddings + búsqueda semántica** — `sentence-transformers/all-MiniLM-L6-v2`, similitud coseno
+- **Fallback chain de modelos** — si Gemini falla (quota/deprecado/sobrecarga), prueba el siguiente automáticamente
+- **Scraping multi-portal** — arquitectura extensible: una clase base + un scraper por portal
+
+---
+
+## Datos
+
+- `data/offers.json` — caché local de ofertas (deduplicación automática por URL)
+- `data/cv.pdf` / `data/cv.txt` — tu CV para el matching
+
+---
+
+*Ares Caballero · [github.com/aresmendi](https://github.com/aresmendi) · [linkedin.com/in/ares-caballero](https://linkedin.com/in/ares-caballero)*
