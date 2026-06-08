@@ -16,3 +16,4 @@ class OfferResponse(OfferBase):
     id: int
     score: Optional[int] = None
     score_reason: Optional[str] = None
+    source: Optional[str] = None

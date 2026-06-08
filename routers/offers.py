@@ -19,5 +19,14 @@ def get_offer(offer_id: int):
     return offer
 
 @router.post("/scrape", response_model=List[OfferResponse])
-def scrape_offer(q: str = "python"):
-    return ScraperService(repo).scrape(q)
+def scrape_offers(
+    q: str = "python",
+    location: str = "",
+    portal: str = "all",
+):
+    """
+    Scrapea ofertas de uno o todos los portales.
+    - portal: all | tecnoempleo | infojobs | indeed | linkedin
+    - location: ciudad o país (ej. "Valencia", "España")
+    """
+    return ScraperService(repo).scrape(query=q, location=location, portal=portal)
