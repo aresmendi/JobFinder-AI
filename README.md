@@ -60,6 +60,16 @@ uvicorn main:app --reload
 
 API docs interactiva en **http://127.0.0.1:8000/docs**
 
+### Con Docker
+
+```bash
+cp .env.example .env      # añade tu GEMINI_API_KEY
+cp tu_cv.pdf data/cv.pdf  # tu CV para el matching
+docker compose up -d --build
+```
+
+La app queda en **http://localhost:8000**. `data/` se monta como volumen: ofertas y CV persisten fuera del contenedor.
+
 ---
 
 ## Endpoints

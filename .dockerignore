@@ -1,0 +1,20 @@
+# Entornos y metadatos
+.git
+.venv
+.idea
+.pytest_cache
+__pycache__
+**/__pycache__
+
+# Tests (no van en la imagen)
+tests/
+pytest.ini
+requirements-dev.txt
+
+# Datos personales y secretos: van por volumen y env_file, nunca en la imagen
+data/
+.env
+
+# Docs
+*.md
+LICENSE

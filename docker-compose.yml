@@ -1,0 +1,11 @@
+services:
+  jobfinder:
+    build: .
+    container_name: jobfinder-ai
+    ports:
+      - "8000:8000"
+    env_file: .env
+    volumes:
+      # Persistencia: ofertas y CV viven fuera del contenedor
+      - ./data:/app/data
+    restart: unless-stopped
