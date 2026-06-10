@@ -1,6 +1,10 @@
 from dataclasses import dataclass, field
 from typing import Optional
 
+# Estados del ciclo de vida de una oferta (sección "Mis Aplicaciones")
+OFFER_STATUSES = ("nueva", "aplicada", "descartada")
+
+
 @dataclass
 class Offer:
     """Entidad de dominio"""
@@ -15,3 +19,4 @@ class Offer:
     matched_keywords: Optional[list] = None
     missing_keywords: Optional[list] = None
     source: Optional[str] = None  # portal de origen: tecnoempleo, infojobs, indeed, linkedin
+    status: str = "nueva"  # nueva | aplicada | descartada

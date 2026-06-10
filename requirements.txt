@@ -2,9 +2,11 @@ fastapi
 uvicorn[standard]
 pydantic-settings
 httpx
+requests
 beautifulsoup4
 google-genai
 pdfplumber
 python-docx
 playwright
+numpy
 sentence-transformers

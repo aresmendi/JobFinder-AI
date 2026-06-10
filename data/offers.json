@@ -15,7 +15,9 @@
     ],
     "missing_keywords": [
       "IA"
-    ]
+    ],
+    "source": null,
+    "status": "nueva"
   },
   {
     "id": 2,
@@ -36,7 +38,9 @@
       "unittest-mock",
       "pytest-mock",
       "postgresql"
-    ]
+    ],
+    "source": null,
+    "status": "nueva"
   },
   {
     "id": 3,
@@ -52,7 +56,9 @@
     ],
     "missing_keywords": [
       "Django"
-    ]
+    ],
+    "source": null,
+    "status": "nueva"
   },
   {
     "id": 4,
@@ -69,7 +75,9 @@
     ],
     "missing_keywords": [
       "Flask"
-    ]
+    ],
+    "source": null,
+    "status": "nueva"
   },
   {
     "id": 5,
@@ -87,7 +95,9 @@
     ],
     "missing_keywords": [
       "Bitbucket"
-    ]
+    ],
+    "source": null,
+    "status": "nueva"
   },
   {
     "id": 6,
@@ -104,7 +114,9 @@
     "missing_keywords": [
       "Fortran",
       "JavaScript"
-    ]
+    ],
+    "source": null,
+    "status": "nueva"
   },
   {
     "id": 7,
@@ -124,7 +136,9 @@
     ],
     "missing_keywords": [
       "Flask"
-    ]
+    ],
+    "source": null,
+    "status": "nueva"
   },
   {
     "id": 8,
@@ -142,7 +156,9 @@
     ],
     "missing_keywords": [
       "GraphQL"
-    ]
+    ],
+    "source": null,
+    "status": "nueva"
   },
   {
     "id": 9,
@@ -161,7 +177,9 @@
       "Spark",
       "Analista de datos",
       "Banca"
-    ]
+    ],
+    "source": null,
+    "status": "nueva"
   },
   {
     "id": 10,
@@ -180,7 +198,9 @@
       "AWS",
       "DevOps",
       "Senior"
-    ]
+    ],
+    "source": null,
+    "status": "nueva"
   },
   {
     "id": 11,
@@ -196,7 +216,9 @@
       "SQL",
       "Git"
     ],
-    "missing_keywords": []
+    "missing_keywords": [],
+    "source": null,
+    "status": "nueva"
   },
   {
     "id": 12,
@@ -213,7 +235,9 @@
     "missing_keywords": [
       "AWS",
       "RAG"
-    ]
+    ],
+    "source": null,
+    "status": "nueva"
   },
   {
     "id": 13,
@@ -230,7 +254,9 @@
     "missing_keywords": [
       "C++",
       "C#"
-    ]
+    ],
+    "source": null,
+    "status": "nueva"
   },
   {
     "id": 14,
@@ -247,7 +273,9 @@
     "missing_keywords": [
       "ia generativa",
       "azure"
-    ]
+    ],
+    "source": null,
+    "status": "nueva"
   },
   {
     "id": 15,
@@ -266,7 +294,9 @@
     "missing_keywords": [
       "ETL",
       "Data Engineer"
-    ]
+    ],
+    "source": null,
+    "status": "nueva"
   },
   {
     "id": 16,
@@ -283,7 +313,9 @@
     ],
     "missing_keywords": [
       "Node.js"
-    ]
+    ],
+    "source": null,
+    "status": "nueva"
   },
   {
     "id": 17,
@@ -298,7 +330,9 @@
       "Python",
       "FastAPI"
     ],
-    "missing_keywords": []
+    "missing_keywords": [],
+    "source": null,
+    "status": "nueva"
   },
   {
     "id": 18,
@@ -316,7 +350,9 @@
     "missing_keywords": [
       "PowerApps",
       "macros"
-    ]
+    ],
+    "source": null,
+    "status": "nueva"
   },
   {
     "id": 19,
@@ -333,7 +369,9 @@
     "missing_keywords": [
       "AWS",
       "Pandas"
-    ]
+    ],
+    "source": null,
+    "status": "nueva"
   },
   {
     "id": 20,
@@ -356,7 +394,9 @@
       "ORM",
       "Grado en Ingeniería Informática",
       "+3 años de experiencia en backend con Python"
-    ]
+    ],
+    "source": null,
+    "status": "nueva"
   },
   {
     "id": 21,
@@ -375,7 +415,9 @@
     "missing_keywords": [
       "AWS",
       "Cloud"
-    ]
+    ],
+    "source": null,
+    "status": "nueva"
   },
   {
     "id": 22,
@@ -387,7 +429,9 @@
     "score": null,
     "score_reason": null,
     "matched_keywords": null,
-    "missing_keywords": null
+    "missing_keywords": null,
+    "source": null,
+    "status": "nueva"
   },
   {
     "id": 23,
@@ -402,7 +446,9 @@
       "Python",
       "SQL"
     ],
-    "missing_keywords": []
+    "missing_keywords": [],
+    "source": null,
+    "status": "nueva"
   },
   {
     "id": 24,
@@ -414,7 +460,9 @@
     "score": null,
     "score_reason": null,
     "matched_keywords": null,
-    "missing_keywords": null
+    "missing_keywords": null,
+    "source": null,
+    "status": "nueva"
   },
   {
     "id": 25,
@@ -426,7 +474,9 @@
     "score": null,
     "score_reason": null,
     "matched_keywords": null,
-    "missing_keywords": null
+    "missing_keywords": null,
+    "source": null,
+    "status": "nueva"
   },
   {
     "id": 26,
@@ -438,7 +488,9 @@
     "score": null,
     "score_reason": null,
     "matched_keywords": null,
-    "missing_keywords": null
+    "missing_keywords": null,
+    "source": null,
+    "status": "nueva"
   },
   {
     "id": 27,
@@ -450,7 +502,9 @@
     "score": null,
     "score_reason": null,
     "matched_keywords": null,
-    "missing_keywords": null
+    "missing_keywords": null,
+    "source": null,
+    "status": "nueva"
   },
   {
     "id": 28,
@@ -462,7 +516,9 @@
     "score": null,
     "score_reason": null,
     "matched_keywords": null,
-    "missing_keywords": null
+    "missing_keywords": null,
+    "source": null,
+    "status": "nueva"
   },
   {
     "id": 29,
@@ -474,7 +530,9 @@
     "score": null,
     "score_reason": null,
     "matched_keywords": null,
-    "missing_keywords": null
+    "missing_keywords": null,
+    "source": null,
+    "status": "nueva"
   },
   {
     "id": 30,
@@ -486,7 +544,9 @@
     "score": null,
     "score_reason": null,
     "matched_keywords": null,
-    "missing_keywords": null
+    "missing_keywords": null,
+    "source": null,
+    "status": "nueva"
   },
   {
     "id": 31,
@@ -498,6 +558,8 @@
     "score": null,
     "score_reason": null,
     "matched_keywords": null,
-    "missing_keywords": null
+    "missing_keywords": null,
+    "source": null,
+    "status": "nueva"
   }
 ]

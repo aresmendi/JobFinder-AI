@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, Literal
 
 #Equivalente a los DTO
 class OfferBase(BaseModel):
@@ -17,3 +17,9 @@ class OfferResponse(OfferBase):
     score: Optional[int] = None
     score_reason: Optional[str] = None
     source: Optional[str] = None
+    status: str = "nueva"
+    matched_keywords: Optional[list[str]] = None
+    missing_keywords: Optional[list[str]] = None
+
+class OfferStatusUpdate(BaseModel):
+    status: Literal["nueva", "aplicada", "descartada"]

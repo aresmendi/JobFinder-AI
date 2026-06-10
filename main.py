@@ -1,6 +1,10 @@
+from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from routers import offers, scoring, search
+
+BASE_DIR = Path(__file__).resolve().parent
 
 app = FastAPI(title="JobFinder AI")
 
@@ -12,8 +16,9 @@ app.include_router(search.router)
 def health():
     return {"status": "ok"}
 
-# Sirve el frontend en / (debe ir al final para no pisar los routers)
-app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
+# Sirve el frontend en / (debe ir al final para no pisar los routers).
+# Ruta absoluta para que funcione aunque se arranque desde otro directorio.
+app.mount("/", StaticFiles(directory=BASE_DIR / "frontend", html=True), name="frontend")
 
 if __name__ == "__main__":
     import uvicorn

@@ -107,9 +107,11 @@
   <!-- Filtro y orden -->
   <div class="flex items-center justify-between">
     <div class="flex gap-2 text-sm">
-      <button onclick="filterOffers('all')"    id="fAll"    class="filter-btn active-filter px-3 py-1.5 rounded-lg border">Todas</button>
-      <button onclick="filterOffers('scored')" id="fScored" class="filter-btn px-3 py-1.5 rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50">Con score</button>
-      <button onclick="filterOffers('high')"   id="fHigh"   class="filter-btn px-3 py-1.5 rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50">Score ≥ 70</button>
+      <button onclick="filterOffers('all')"     id="fAll"     class="filter-btn active-filter px-3 py-1.5 rounded-lg border">Todas</button>
+      <button onclick="filterOffers('scored')"  id="fScored"  class="filter-btn px-3 py-1.5 rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50">Con score</button>
+      <button onclick="filterOffers('high')"    id="fHigh"    class="filter-btn px-3 py-1.5 rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50">Score ≥ 70</button>
+      <button onclick="filterOffers('applied')" id="fApplied" class="filter-btn px-3 py-1.5 rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50">📋 Mis aplicaciones</button>
+      <button onclick="filterOffers('discarded')" id="fDiscarded" class="filter-btn px-3 py-1.5 rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50">Descartadas</button>
     </div>
     <p id="resultCount" class="text-sm text-gray-400"></p>
   </div>
@@ -147,6 +149,12 @@
     const label = source || 'desconocido';
     const cls = colors[label] || 'bg-gray-100 text-gray-600';
     return `<span class="${cls} text-xs px-2 py-0.5 rounded-full font-medium capitalize">${label}</span>`;
+  }
+
+  function statusBadge(status) {
+    if (status === 'aplicada')   return '<span class="bg-emerald-100 text-emerald-700 text-xs px-2 py-0.5 rounded-full font-medium">✓ Aplicada</span>';
+    if (status === 'descartada') return '<span class="bg-gray-200 text-gray-500 text-xs px-2 py-0.5 rounded-full font-medium">Descartada</span>';
+    return '';
   }
 
   function pills(list, color) {
@@ -193,6 +201,7 @@
 
         <div class="flex flex-wrap gap-1.5">
           ${sourceBadge(o.source)}
+          ${statusBadge(o.status)}
           ${pills(o.matched_keywords, 'bg-green-100 text-green-700')}
         </div>
 
@@ -204,19 +213,37 @@
 
         ${o.score_reason ? `<p class="text-xs text-gray-400 italic border-t pt-2 line-clamp-2">${o.score_reason}</p>` : ''}
 
-        ${o.score == null ? `
-          <button onclick="scoreOne(${o.id})"
-                  class="text-xs text-indigo-600 hover:underline self-start mt-auto">
-            Puntuar esta oferta
-          </button>` : ''}
+        <div class="flex items-center gap-3 mt-auto pt-1">
+          ${o.score == null ? `
+            <button onclick="scoreOne(${o.id})" class="text-xs text-indigo-600 hover:underline">
+              Puntuar
+            </button>` : ''}
+          ${o.status !== 'aplicada' ? `
+            <button onclick="setOfferStatus(${o.id}, 'aplicada')" class="text-xs text-emerald-600 hover:underline">
+              ✓ He aplicado
+            </button>` : `
+            <button onclick="setOfferStatus(${o.id}, 'nueva')" class="text-xs text-gray-400 hover:underline">
+              Desmarcar
+            </button>`}
+          ${o.status !== 'descartada' ? `
+            <button onclick="setOfferStatus(${o.id}, 'descartada')" class="text-xs text-red-400 hover:underline">
+              ✕ Descartar
+            </button>` : `
+            <button onclick="setOfferStatus(${o.id}, 'nueva')" class="text-xs text-gray-400 hover:underline">
+              Recuperar
+            </button>`}
+        </div>
       </div>
     `).join('');
   }
 
   function applyFilter() {
     let list = [...allOffers];
-    if (currentFilter === 'scored') list = list.filter(o => o.score != null);
-    if (currentFilter === 'high')   list = list.filter(o => o.score != null && o.score >= 70);
+    if (currentFilter !== 'discarded') list = list.filter(o => o.status !== 'descartada');
+    if (currentFilter === 'scored')    list = list.filter(o => o.score != null);
+    if (currentFilter === 'high')      list = list.filter(o => o.score != null && o.score >= 70);
+    if (currentFilter === 'applied')   list = list.filter(o => o.status === 'aplicada');
+    if (currentFilter === 'discarded') list = list.filter(o => o.status === 'descartada');
     list.sort((a, b) => (b.score ?? -1) - (a.score ?? -1));
     renderOffers(list);
   }
@@ -226,7 +253,7 @@
     document.querySelectorAll('.filter-btn').forEach(b => {
       b.className = 'filter-btn px-3 py-1.5 rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50 text-sm';
     });
-    const active = document.getElementById({ all: 'fAll', scored: 'fScored', high: 'fHigh' }[f]);
+    const active = document.getElementById({ all: 'fAll', scored: 'fScored', high: 'fHigh', applied: 'fApplied', discarded: 'fDiscarded' }[f]);
     active.className = 'filter-btn px-3 py-1.5 rounded-lg border border-indigo-500 bg-indigo-50 text-indigo-700 font-medium text-sm';
     applyFilter();
   }
@@ -297,6 +324,23 @@
       await loadOffers();
     } catch (e) {
       setStatus('Error al puntuar.');
+    }
+  }
+
+  async function setOfferStatus(id, status) {
+    try {
+      const res = await fetch(`/offers/${id}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+      });
+      if (!res.ok) throw new Error();
+      const updated = await res.json();
+      const idx = allOffers.findIndex(o => o.id === id);
+      if (idx !== -1) allOffers[idx] = updated;
+      applyFilter();
+    } catch (e) {
+      setStatus('Error al actualizar el estado de la oferta.');
     }
   }
 

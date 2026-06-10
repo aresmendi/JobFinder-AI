@@ -17,10 +17,20 @@ FALLBACK_MODELS = [
 class ScoringService:
     """Llama al LLM para puntuar una oferta contra el CV (0-100)"""
 
-    def __init__(self, repo: OfferRepository | None = None):
+    def __init__(self, repo: OfferRepository | None = None, retry_wait: float = 10.0):
         self.repo = repo or OfferRepository()
-        self.client = genai.Client(api_key=settings.gemini_api_key)
+        self.retry_wait = retry_wait
+        self._client: genai.Client | None = None
         self._cv_cache: str | None = None
+
+    @property
+    def client(self) -> genai.Client:
+        # Perezoso: permite instanciar el servicio (y arrancar la app) sin API key
+        if self._client is None:
+            if not settings.gemini_api_key:
+                raise RuntimeError("GEMINI_API_KEY no configurada (revisa el .env)")
+            self._client = genai.Client(api_key=settings.gemini_api_key)
+        return self._client
 
     def _load_cv(self) -> str:
         if self._cv_cache is None:
@@ -41,19 +51,20 @@ class ScoringService:
                     print(f"ℹ️  Usando modelo de fallback: {model}")
                 return resp.text
             except ClientError as e:
+                # OJO: e.status es un string ("UNAVAILABLE"); el código HTTP está en e.code
                 err_str = str(e)
                 # 503 = sobrecarga temporal → esperar y reintentar el mismo modelo una vez
-                if e.status == 503 or "UNAVAILABLE" in err_str:
-                    print(f"⚠️  {model} sobrecargado (503), esperando 10s...")
-                    time.sleep(10)
+                if e.code == 503 or "UNAVAILABLE" in err_str:
+                    print(f"⚠️  {model} sobrecargado (503), esperando {self.retry_wait}s...")
+                    time.sleep(self.retry_wait)
                     try:
                         resp = self.client.models.generate_content(model=model, contents=prompt)
                         return resp.text
                     except Exception:
                         pass  # si falla de nuevo, cae al siguiente modelo
                 # 429 = quota agotada, 404 = modelo deprecado/no disponible → probar siguiente
-                if e.status in (429, 404, 503) or "RESOURCE_EXHAUSTED" in err_str or "NOT_FOUND" in err_str or "UNAVAILABLE" in err_str:
-                    print(f"⚠️  {model} no disponible ({e.status}), probando siguiente...")
+                if e.code in (429, 404, 503) or "RESOURCE_EXHAUSTED" in err_str or "NOT_FOUND" in err_str or "UNAVAILABLE" in err_str:
+                    print(f"⚠️  {model} no disponible ({e.code} {e.status}), probando siguiente...")
                     last_error = e
                     continue
                 raise
@@ -80,15 +91,15 @@ class ScoringService:
         )
         text = self._generate_with_fallback(prompt)
         data = self._parse(text)
-        offer.score = int(data.get("score", 0))
+        try:
+            score = int(data.get("score", 0))
+        except (TypeError, ValueError):
+            score = 0
+        offer.score = max(0, min(100, score))
         offer.score_reason = data.get("reason", "")
         offer.matched_keywords = data.get("matched_keywords", [])
         offer.missing_keywords = data.get("missing_keywords", [])
-        offers = self.repo.list_all()
-        for i, o in enumerate(offers):
-            if o.id == offer.id:
-                offers[i] = offer
-        self.repo.save_all(offers)
+        self.repo.update(offer)
         return offer
 
     def score_all(self, pausa: float = 4.0, pre_filter: int | None = None) -> list[Offer]:

@@ -68,8 +68,10 @@ API docs interactiva en **http://127.0.0.1:8000/docs**
 
 | Método | Ruta | Descripción |
 |---|---|---|
-| `GET` | `/offers` | Lista todas las ofertas guardadas |
+| `GET` | `/offers` | Lista ofertas ordenadas por score; filtros: `status`, `source`, `min_score` |
 | `GET` | `/offers/{id}` | Detalle de una oferta |
+| `PATCH` | `/offers/{id}/status` | Marca la oferta como `aplicada`, `descartada` o `nueva` |
+| `DELETE` | `/offers/{id}` | Elimina una oferta |
 | `POST` | `/offers/scrape` | Scrapea ofertas de uno o varios portales |
 
 **Parámetros de `/offers/scrape`:**
@@ -129,6 +131,10 @@ POST /scoring/all?pre_filter=20
 
 # 4. Ver resultados ordenados por score
 GET /offers
+
+# 5. Llevar el seguimiento de candidaturas
+PATCH /offers/12/status   {"status": "aplicada"}
+GET /offers?status=aplicada
 ```
 
 ---
@@ -154,9 +160,20 @@ GET /offers
 
 ---
 
+## Tests
+
+```bash
+pip install -r requirements-dev.txt
+pytest
+```
+
+56 tests sobre repositorio, servicios (scoring, scraping, embeddings, CV) y todos los endpoints. El LLM y el modelo de embeddings van mockeados: la suite corre en ~1s sin red ni API key.
+
+---
+
 ## Datos
 
-- `data/offers.json` — caché local de ofertas (deduplicación automática por URL)
+- `data/offers.json` — caché local de ofertas (deduplicación automática por URL, escritura atómica)
 - `data/cv.pdf` / `data/cv.txt` — tu CV para el matching
 
 ---
