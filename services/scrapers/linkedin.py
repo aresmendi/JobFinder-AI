@@ -13,7 +13,7 @@ class LinkedInScraper(BasePortalScraper):
 
     def scrape(self, query: str, location: str = "", start_id: int = 0) -> List[Offer]:
         loc = location or "Spain"
-        url = f"{BASE}/?keywords={query}&location={loc}&f_TPR=r86400"  # últimas 24h
+        url = f"{BASE}/?keywords={query}&location={loc}&f_TPR=r604800"  # últimos 7 días
         try:
             html = self._playwright_html(url, ".base-card, .job-search-card", timeout=15000)
             return self._parse(html, start_id)
@@ -32,6 +32,7 @@ class LinkedInScraper(BasePortalScraper):
             comp = card.select_one(".base-search-card__subtitle a, h4.base-search-card__subtitle")
             loc = card.select_one(".job-search-card__location, span.job-search-card__location")
             href = a.get("href", "").split("?")[0]  # quita tracking params
+            posted_raw, posted_days_ago = self._extract_posted(card)
             offers.append(Offer(
                 id=start_id + len(offers),
                 title=title_el.get_text(strip=True),
@@ -40,5 +41,7 @@ class LinkedInScraper(BasePortalScraper):
                 location=loc.get_text(strip=True) if loc else None,
                 description=None,
                 source=self.portal_name,
+                posted_raw=posted_raw,
+                posted_days_ago=posted_days_ago,
             ))
         return offers

@@ -14,6 +14,7 @@ def list_offers(
     status: Optional[str] = Query(default=None, description="nueva | aplicada | descartada"),
     source: Optional[str] = Query(default=None, description="tecnoempleo | infojobs | indeed | linkedin"),
     min_score: Optional[int] = Query(default=None, ge=0, le=100),
+    days: Optional[int] = Query(default=None, ge=0, description="solo ofertas publicadas en los últimos N días (las de fecha desconocida se mantienen)"),
     repo: OfferRepository = Depends(get_repo),
 ):
     """Lista ofertas, ordenadas por score (las sin puntuar al final). Admite filtros."""
@@ -24,6 +25,8 @@ def list_offers(
         offers = [o for o in offers if o.source == source]
     if min_score is not None:
         offers = [o for o in offers if o.score is not None and o.score >= min_score]
+    if days is not None:
+        offers = [o for o in offers if o.posted_days_ago is None or o.posted_days_ago <= days]
     return sorted(offers, key=lambda o: (o.score is None, -(o.score or 0)))
 
 

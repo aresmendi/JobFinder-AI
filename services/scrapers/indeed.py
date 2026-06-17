@@ -21,7 +21,7 @@ class IndeedScraper(BasePortalScraper):
         cards = soup.select(".job_seen_beacon")
         offers: List[Offer] = []
         for card in cards:
-            a = card.select_one("h2.jobTitle a")
+            a = card.select_one("h2.jobTitle a, h3.jobTitle a")
             if not a:
                 continue
             comp = card.select_one("[data-testid='company-name']")
@@ -29,6 +29,7 @@ class IndeedScraper(BasePortalScraper):
             desc = card.select_one(".job-snippet, [data-testid='job-snippet']")
             href = a.get("href", "").strip()
             url = href if href.startswith("http") else f"https://es.indeed.com{href}"
+            posted_raw, posted_days_ago = self._extract_posted(card)
             offers.append(Offer(
                 id=start_id + len(offers),
                 title=a.get_text(strip=True),
@@ -37,5 +38,7 @@ class IndeedScraper(BasePortalScraper):
                 location=loc.get_text(strip=True) if loc else None,
                 description=desc.get_text(" ", strip=True)[:400] if desc else None,
                 source=self.portal_name,
+                posted_raw=posted_raw,
+                posted_days_ago=posted_days_ago,
             ))
         return offers

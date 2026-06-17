@@ -37,6 +37,7 @@ class InfojobsScraper(BasePortalScraper):
             desc = card.select_one("[data-testid='description'], .description, p")
             href = a.get("href", "").strip()
             url = href if href.startswith("http") else f"https://www.infojobs.net{href}"
+            posted_raw, posted_days_ago = self._extract_posted(card)
             offers.append(Offer(
                 id=start_id + len(offers),
                 title=title_el.get_text(strip=True),
@@ -45,5 +46,7 @@ class InfojobsScraper(BasePortalScraper):
                 location=loc.get_text(strip=True) if loc else None,
                 description=desc.get_text(" ", strip=True)[:400] if desc else None,
                 source=self.portal_name,
+                posted_raw=posted_raw,
+                posted_days_ago=posted_days_ago,
             ))
         return offers

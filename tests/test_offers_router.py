@@ -20,6 +20,17 @@ def test_list_offers_filter_min_score(client, sample_offers):
     assert [o["id"] for o in r.json()] == [1]
 
 
+def test_list_offers_filter_days(client, repo):
+    from models.offer import Offer
+    repo.save_all([
+        Offer(id=1, title="Reciente", url="https://example.com/r", posted_days_ago=2),
+        Offer(id=2, title="Vieja", url="https://example.com/v", posted_days_ago=30),
+        Offer(id=3, title="Sin fecha", url="https://example.com/s", posted_days_ago=None),
+    ])
+    r = client.get("/offers", params={"days": 7})
+    assert sorted(o["id"] for o in r.json()) == [1, 3]
+
+
 def test_get_offer(client, sample_offers):
     r = client.get("/offers/1")
     assert r.status_code == 200

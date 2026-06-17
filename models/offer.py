@@ -20,3 +20,5 @@ class Offer:
     missing_keywords: Optional[list] = None
     source: Optional[str] = None  # portal de origen: tecnoempleo, infojobs, indeed, linkedin
     status: str = "nueva"  # nueva | aplicada | descartada
+    posted_raw: Optional[str] = None  # texto de fecha tal cual aparece en el portal
+    posted_days_ago: Optional[int] = None  # días transcurridos desde la publicación, ya parseado

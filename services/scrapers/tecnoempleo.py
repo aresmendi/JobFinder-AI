@@ -1,8 +1,12 @@
+import re
 from typing import List
 import requests
 from bs4 import BeautifulSoup
 from models.offer import Offer
+from services.date_utils import parse_posted_date
 from .base import BasePortalScraper, HEADERS
+
+_DATE_RE = re.compile(r"\d{2}/\d{2}/\d{4}")
 
 BASE = "https://www.tecnoempleo.com/ofertas-trabajo/"
 
@@ -50,6 +54,8 @@ class TecnoempleoScraper(BasePortalScraper):
                 description += " | Skills: " + ", ".join(skills)
             href = a.get("href", "").strip()
             url = href if href.startswith("http") else f"https://www.tecnoempleo.com{href}"
+            date_match = _DATE_RE.search(card.get_text(" ", strip=True))
+            posted_raw, posted_days_ago = parse_posted_date(date_match.group(0) if date_match else None)
             offers.append(Offer(
                 id=start_id + len(offers),
                 title=a.get_text(strip=True),
@@ -58,5 +64,7 @@ class TecnoempleoScraper(BasePortalScraper):
                 location=loc.get_text(strip=True) if loc else None,
                 description=description or None,
                 source=self.portal_name,
+                posted_raw=posted_raw,
+                posted_days_ago=posted_days_ago,
             ))
         return offers

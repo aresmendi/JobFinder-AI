@@ -20,6 +20,8 @@ class OfferResponse(OfferBase):
     status: str = "nueva"
     matched_keywords: Optional[list[str]] = None
     missing_keywords: Optional[list[str]] = None
+    posted_raw: Optional[str] = None
+    posted_days_ago: Optional[int] = None
 
 class OfferStatusUpdate(BaseModel):
     status: Literal["nueva", "aplicada", "descartada"]
