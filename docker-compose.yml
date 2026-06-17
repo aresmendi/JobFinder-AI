@@ -3,7 +3,8 @@ services:
     build: .
     container_name: jobfinder-ai
     ports:
-      - "8000:8000"
+      # host:contenedor — 8080 en el host (el 8000 suele estar ocupado en dev)
+      - "8080:8000"
     env_file: .env
     volumes:
       # Persistencia: ofertas y CV viven fuera del contenedor
